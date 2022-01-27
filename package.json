@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node emmanuel-brand-host/app.js",
-    "dev": "nodemon emmanuel-brand-host/app.js",
+    "dev": "",
     "build": "babel --copy-files emmanuel-brand --out-dir emmanuel-brand-host"
   },
   "repository": {
@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/Emmanuel262/brand-backend#readme",
   "dependencies": {
+    "@babel/runtime": "^7.16.7",
     "bcrypt": "^5.0.1",
     "body-parser": "^1.19.1",
     "cloudinary": "^1.28.1",

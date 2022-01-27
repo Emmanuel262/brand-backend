@@ -80,22 +80,22 @@ dotenv.config();
 // });
 
 export async function get_articles(req, res) {
-  try {
-    await Article.find({})
-      .then((result) => {
-        res.status(200).json({
-          Length_of_articles: result.length,
-          articles: result,
-        });
-      })
-      .catch((err) => {
-        res.status(400).json({ Errors: err });
+  // try {
+  await Article.find({})
+    .then((result) => {
+      res.status(200).json({
+        Length_of_articles: result.length,
+        articles: result,
       });
-  } catch (error) {
-    res.status(400).json({
-      Errors: error,
+    })
+    .catch((err) => {
+      res.status(400).json({ Errors: err });
     });
-  }
+  // } catch (error) {
+  //   res.status(400).json({
+  //     Errors: error,
+  //   });
+  // }
 }
 
 export async function get_article(req, res) {

@@ -28,8 +28,8 @@ function _create_querie() {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            _req$body = req.body, name = _req$body.name, email = _req$body.email, message = _req$body.message;
-            _context.prev = 1;
+            _req$body = req.body, name = _req$body.name, email = _req$body.email, message = _req$body.message; // try {
+
             errors = {};
 
             if (name == undefined) {
@@ -45,22 +45,22 @@ function _create_querie() {
             }
 
             if (!(Object.values(errors).length > 0)) {
-              _context.next = 8;
+              _context.next = 7;
               break;
             }
 
             throw errors;
 
-          case 8:
+          case 7:
             if (!(name.length === 0 || !_validator["default"].isEmail(email) || message.length === 0)) {
-              _context.next = 12;
+              _context.next = 11;
               break;
             }
 
             throw new Error("You must fill Name, Email and message correctly.");
 
-          case 12:
-            _context.next = 14;
+          case 11:
+            _context.next = 13;
             return _queriesModels["default"].create({
               name: name,
               email: email,
@@ -77,24 +77,12 @@ function _create_querie() {
               });
             });
 
-          case 14:
-            _context.next = 19;
-            break;
-
-          case 16:
-            _context.prev = 16;
-            _context.t0 = _context["catch"](1);
-            res.status(400).json({
-              ErrorMessage: _context.t0.message,
-              Errors: _context.t0
-            });
-
-          case 19:
+          case 13:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[1, 16]]);
+    }, _callee);
   }));
   return _create_querie.apply(this, arguments);
 }
@@ -109,8 +97,7 @@ function _get_queries() {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
-            _context2.prev = 0;
-            _context2.next = 3;
+            _context2.next = 2;
             return _queriesModels["default"].find({}).then(function (result) {
               res.status(200).json({
                 Length_of_queries: result.length,
@@ -122,23 +109,12 @@ function _get_queries() {
               });
             });
 
-          case 3:
-            _context2.next = 8;
-            break;
-
-          case 5:
-            _context2.prev = 5;
-            _context2.t0 = _context2["catch"](0);
-            res.status(400).json({
-              Errors: _context2.t0
-            });
-
-          case 8:
+          case 2:
           case "end":
             return _context2.stop();
         }
       }
-    }, _callee2, null, [[0, 5]]);
+    }, _callee2);
   }));
   return _get_queries.apply(this, arguments);
 }

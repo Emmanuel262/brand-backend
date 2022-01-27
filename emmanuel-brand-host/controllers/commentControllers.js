@@ -39,8 +39,8 @@ function _create_comment() {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
-            _req$body = req.body, name = _req$body.name, email = _req$body.email, comment = _req$body.comment;
-            _context2.prev = 1;
+            _req$body = req.body, name = _req$body.name, email = _req$body.email, comment = _req$body.comment; // try {
+
             errors = {};
 
             if (name == undefined) {
@@ -56,22 +56,22 @@ function _create_comment() {
             }
 
             if (!(Object.values(errors).length > 0)) {
-              _context2.next = 8;
+              _context2.next = 7;
               break;
             }
 
             throw errors;
 
-          case 8:
+          case 7:
             if (!(name.length === 0 || !_validator["default"].isEmail(email) || comment.length === 0)) {
-              _context2.next = 10;
+              _context2.next = 9;
               break;
             }
 
             throw new Error("You must fill Name, Email and Comment correctly.");
 
-          case 10:
-            _context2.next = 12;
+          case 9:
+            _context2.next = 11;
             return _commentModels["default"].create({
               name: name,
               email: email,
@@ -127,24 +127,12 @@ function _create_comment() {
               });
             });
 
-          case 12:
-            _context2.next = 17;
-            break;
-
-          case 14:
-            _context2.prev = 14;
-            _context2.t0 = _context2["catch"](1);
-            res.status(400).json({
-              ErrorMessage: _context2.t0.message,
-              Errors: _context2.t0
-            });
-
-          case 17:
+          case 11:
           case "end":
             return _context2.stop();
         }
       }
-    }, _callee2, null, [[1, 14]]);
+    }, _callee2);
   }));
   return _create_comment.apply(this, arguments);
 }

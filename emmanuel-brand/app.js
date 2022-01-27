@@ -11,6 +11,7 @@ import hpp from "hpp";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import mongoSanitize from "express-mongo-sanitize";
+import engines from "consolidate";
 
 import dashboardRoutes from "./routes/dashboardRoutes.js";
 import homeRoutes from "./routes/homeRoutes.js";
@@ -44,6 +45,9 @@ app.use(
     parameterLimit: 1000000,
   })
 );
+
+// app.engine('html', engines.mustache);
+app.set("view engine", "html");
 app.use(express.json());
 
 app.use((req, res, next) => {
@@ -67,6 +71,7 @@ const limiter = rateLimit({
   windowMs: 60 * 60 * 1000,
   message: "Too many requetss from this IP, please try again in an hour!",
 });
+
 app.use("/api/v1", limiter);
 app.use(mongoSanitize());
 app.use(xss());
@@ -74,6 +79,9 @@ app.use(xss());
 // Set up routes
 app.use("/api/v1/", homeRoutes);
 app.use("/api/v1/dashboard", dashboardRoutes);
+app.get("/", (req, res, next) => {
+  res.send("index.html");
+});
 
 app.use((req, res, next) => {
   const error = new Error(`Can't find ${req.originalUrl} on this server!`);

@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node emmanuel-brand-host/app.js",
-    "dev": "",
+    "dev": "nodemon emmanuel-brand-host/app.js",
     "build": "babel --copy-files emmanuel-brand --out-dir emmanuel-brand-host"
   },
   "repository": {
@@ -23,6 +23,7 @@
     "bcrypt": "^5.0.1",
     "body-parser": "^1.19.1",
     "cloudinary": "^1.28.1",
+    "consolidate": "^0.16.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^11.0.0",

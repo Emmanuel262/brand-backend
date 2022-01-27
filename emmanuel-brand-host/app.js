@@ -33,6 +33,8 @@ var _expressRateLimit = _interopRequireDefault(require("express-rate-limit"));
 
 var _expressMongoSanitize = _interopRequireDefault(require("express-mongo-sanitize"));
 
+var _consolidate = _interopRequireDefault(require("consolidate"));
+
 var _dashboardRoutes = _interopRequireDefault(require("./routes/dashboardRoutes.js"));
 
 var _homeRoutes = _interopRequireDefault(require("./routes/homeRoutes.js"));
@@ -43,8 +45,7 @@ function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && 
 
 _dotenv["default"].config();
 
-var app = (0, _express["default"])(); // const __filename = fileURLToPath(import.meta.url);
-// const __dirname = dirname(__filename);
+var app = (0, _express["default"])();
 
 var _dirname = _path["default"].resolve();
 
@@ -63,24 +64,18 @@ _mongoose["default"].connect(DB_URI).then(function () {
 
 
 app.use(_express["default"]["static"](_path["default"].join(_dirname, "public")));
-app.use("/uploads", _express["default"]["static"](_path["default"].join(_dirname, "uploads"))); // // Allow BodyParser
-// // Allow CookiParser
-
-app.use((0, _cookieParser["default"])()); // app.use(bodyParser.json({ limit: "50mb" }));
-// app.use(express.urlencoded({ extended: false }));
-// app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
-// app.use(express.json({ limit: "50mb" }));
-// app.use(express.urlencoded({ limit: "50mb" }));
-
+app.use("/uploads", _express["default"]["static"](_path["default"].join(_dirname, "uploads")));
+app.use((0, _cookieParser["default"])());
 app.use(_bodyParser["default"].json({
   limit: "50mb"
-})); // app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
-
+}));
 app.use(_bodyParser["default"].urlencoded({
   limit: "50mb",
   extended: true,
   parameterLimit: 1000000
-}));
+})); // app.engine('html', engines.mustache);
+
+app.set("view engine", "html");
 app.use(_express["default"].json());
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -105,6 +100,9 @@ app.use((0, _xssClean["default"])()); // Set up routes
 
 app.use("/api/v1/", _homeRoutes["default"]);
 app.use("/api/v1/dashboard", _dashboardRoutes["default"]);
+app.get("/", function (req, res, next) {
+  res.send("index.html");
+});
 app.use(function (req, res, next) {
   var error = new Error("Can't find ".concat(req.originalUrl, " on this server!"));
   error.status = 404;

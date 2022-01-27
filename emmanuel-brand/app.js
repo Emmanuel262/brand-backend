@@ -17,8 +17,6 @@ import homeRoutes from "./routes/homeRoutes.js";
 
 dotenv.config();
 const app = express();
-// const __filename = fileURLToPath(import.meta.url);
-// const __dirname = dirname(__filename);
 const __dirname = path.resolve();
 app.enable("trust proxy");
 app.use(cors());
@@ -37,8 +35,6 @@ mongoose
 // Set up public folder access
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-// // Allow BodyParser
-// // Allow CookiParser
 app.use(cookieParser());
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(

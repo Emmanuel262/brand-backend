@@ -74,7 +74,7 @@ var createToken = function createToken(id, userEmail) {
     id: id,
     userEmail: userEmail
   }, process.env.JWT_SECRET, {
-    expiresIn: "1h"
+    expiresIn: process.env.JWT_COOKIE_EXPIRES_IN
   });
 };
 
@@ -127,29 +127,33 @@ function _login_post() {
           case 10:
             token = createToken(user._id, user.email);
             res.cookie("jwt", token, {
-              httpOny: true,
-              maxAge: maxAge * 1000
-            });
+              expires: new Date(Date.now() + process.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000),
+              secure: req.secure || req.headers["x-forwarded-photo"] === "https"
+            }); // Remove password from output
+
+            user.password = undefined;
             res.status(200).json({
               status: "User login Successful",
-              user: user
+              data: {
+                user: user
+              }
             });
-            _context.next = 18;
+            _context.next = 19;
             break;
 
-          case 15:
-            _context.prev = 15;
+          case 16:
+            _context.prev = 16;
             _context.t0 = _context["catch"](4);
             res.status(400).json({
               Error: _context.t0.message
             });
 
-          case 18:
+          case 19:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[4, 15]]);
+    }, _callee, null, [[4, 16]]);
   }));
   return _login_post.apply(this, arguments);
 }

@@ -190,119 +190,119 @@ export async function create_articles(req, res) {
 }
 
 export async function update_article(req, res) {
-  // try {
-  if (req.file || req.files.length > 0) {
-    console.log("updating image process");
-  }
-  if (Object.keys(req.body).length == 0) {
-    throw new Error(
-      "Nothing to update, you must provide a field you want to update"
-    );
-  }
-  if (Object.keys(req.body).length > 0) {
-    let bodyKeys = Object.keys(req.body);
-    var requiredObject = ["articleTitle", "summary", "description"];
-    bodyKeys.forEach((key) => {
-      if (!requiredObject.includes(key)) {
-        throw new Error(`"${key}" is not part of required body field.`);
-      }
+  try {
+    if (req.file || req.files.length > 0) {
+      console.log("updating image process");
+    }
+    if (Object.keys(req.body).length == 0 && req.files.length <= 0) {
+      throw new Error(
+        "Nothing to update, you must provide a field you want to update"
+      );
+    }
+    if (Object.keys(req.body).length > 0) {
+      let bodyKeys = Object.keys(req.body);
+      var requiredObject = ["articleTitle", "summary", "description"];
+      bodyKeys.forEach((key) => {
+        if (!requiredObject.includes(key)) {
+          throw new Error(`"${key}" is not part of required body field.`);
+        }
+      });
+    }
+    // const doc = await Article.findByIdAndUpdate(req.params.id, req.body, {
+    //   new: true,
+    //   runValidators: true,
+    // });
+    await Article.findById(req.params.id)
+      .then(async (doc) => {
+        let urls = [];
+        if (req.files.length > 0) {
+          let idss = doc.article_photos;
+          for (let i = 0; i < idss.length; i++) {
+            await cloudinary.v2.uploader.destroy(idss[i]);
+          }
+          let files = req.files;
+          for (const file of files) {
+            const { path } = file;
+            // const newPath = await uploader(path);
+            var results = await cloudinary.v2.uploader.upload(path);
+            urls.push(results.secure_url);
+            fs.unlinkSync(path);
+          }
+          doc.article_photos = urls;
+        } else {
+          doc.article_photos = doc.article_photos;
+        }
+
+        if (req.body.description) {
+          doc.description = req.body.description;
+        } else {
+          doc.description = doc.description;
+        }
+
+        if (req.body.articleTitle) {
+          doc.articleTitle = req.body.articleTitle;
+        } else {
+          doc.articleTitle = doc.articleTitle;
+        }
+
+        if (req.body.summary) {
+          doc.summary = req.body.summary;
+        } else {
+          doc.summary = doc.summary;
+        }
+        let data = await doc.save();
+        res.status(200).json({
+          status: "successful updated",
+          data: {
+            data: data,
+          },
+        });
+      })
+      .catch((err) => {
+        res.status(400).json({
+          Message: "Error Occured",
+          errorMessage: err.message,
+        });
+      });
+
+    // await Article.findById(req.params.id, async function (err, doc) {
+    //   if (err) {
+    //     throw new Error("No document found with that ID");
+    //   }
+    //   if (req.files.length > 0) {
+    //     let idss = doc.article_photos;
+    //     for (let i = 0; i < idss.length; i++) {
+    //       await cloudinary.v2.uploader.destroy(idss[i]);
+    //     }
+    //     let files = req.files;
+    //     let urls = [];
+    //     for (const file of files) {
+    //       const { path } = file;
+    //       // const newPath = await uploader(path);
+    //       var results = await cloudinary.v2.uploader.upload(path);
+    //       urls.push(results.secure_url);
+    //       fs.unlinkSync(path);
+    //     }
+    //     doc.article_photos = urls;
+    //   }
+
+    //   (doc.articleTitle = req.body.articleTitle),
+    //     (doc.smmary = req.body.summary),
+    //     (doc.description = req.description);
+    //   let data = await doc.save();
+    //   res.status(200).json({
+    //     status: "successful updated",
+    //     data: {
+    //       data: data,
+    //     },
+    //   });
+    // });
+  } catch (error) {
+    res.status(404).json({
+      Message: error.message,
+      Error: error,
     });
   }
-  // const doc = await Article.findByIdAndUpdate(req.params.id, req.body, {
-  //   new: true,
-  //   runValidators: true,
-  // });
-  await Article.findById(req.params.id)
-    .then(async (doc) => {
-      let urls = [];
-      if (req.files.length > 0) {
-        let idss = doc.article_photos;
-        for (let i = 0; i < idss.length; i++) {
-          await cloudinary.v2.uploader.destroy(idss[i]);
-        }
-        let files = req.files;
-        for (const file of files) {
-          const { path } = file;
-          // const newPath = await uploader(path);
-          var results = await cloudinary.v2.uploader.upload(path);
-          urls.push(results.secure_url);
-          fs.unlinkSync(path);
-        }
-        doc.article_photos = urls;
-      } else {
-        doc.article_photos = doc.article_photos;
-      }
-
-      if (req.body.description) {
-        doc.description = req.body.description;
-      } else {
-        doc.description = doc.description;
-      }
-
-      if (req.body.articleTitle) {
-        doc.articleTitle = req.body.articleTitle;
-      } else {
-        doc.articleTitle = doc.articleTitle;
-      }
-
-      if (req.body.summary) {
-        doc.summary = req.body.summary;
-      } else {
-        doc.summary = doc.summary;
-      }
-      let data = await doc.save();
-      res.status(200).json({
-        status: "successful updated",
-        data: {
-          data: data,
-        },
-      });
-    })
-    .catch((err) => {
-      res.status(400).json({
-        Message: "Error Occured",
-        errorMessage: err.message,
-      });
-    });
-
-  // await Article.findById(req.params.id, async function (err, doc) {
-  //   if (err) {
-  //     throw new Error("No document found with that ID");
-  //   }
-  //   if (req.files.length > 0) {
-  //     let idss = doc.article_photos;
-  //     for (let i = 0; i < idss.length; i++) {
-  //       await cloudinary.v2.uploader.destroy(idss[i]);
-  //     }
-  //     let files = req.files;
-  //     let urls = [];
-  //     for (const file of files) {
-  //       const { path } = file;
-  //       // const newPath = await uploader(path);
-  //       var results = await cloudinary.v2.uploader.upload(path);
-  //       urls.push(results.secure_url);
-  //       fs.unlinkSync(path);
-  //     }
-  //     doc.article_photos = urls;
-  //   }
-
-  //   (doc.articleTitle = req.body.articleTitle),
-  //     (doc.smmary = req.body.summary),
-  //     (doc.description = req.description);
-  //   let data = await doc.save();
-  //   res.status(200).json({
-  //     status: "successful updated",
-  //     data: {
-  //       data: data,
-  //     },
-  //   });
-  // });
-  // } catch (error) {
-  //   res.status(404).json({
-  //     Message: error.message,
-  //     Error: error,
-  //   });
-  // }
 }
 
 export async function delete_article(req, res) {

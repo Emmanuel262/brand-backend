@@ -367,19 +367,20 @@ function _update_article() {
       while (1) {
         switch (_context6.prev = _context6.next) {
           case 0:
-            // try {
+            _context6.prev = 0;
+
             if (req.file || req.files.length > 0) {
               console.log("updating image process");
             }
 
-            if (!(Object.keys(req.body).length == 0)) {
-              _context6.next = 3;
+            if (!(Object.keys(req.body).length == 0 && req.files.length <= 0)) {
+              _context6.next = 4;
               break;
             }
 
             throw new Error("Nothing to update, you must provide a field you want to update");
 
-          case 3:
+          case 4:
             if (Object.keys(req.body).length > 0) {
               bodyKeys = Object.keys(req.body);
               requiredObject = ["articleTitle", "summary", "description"];
@@ -394,7 +395,7 @@ function _update_article() {
             // });
 
 
-            _context6.next = 6;
+            _context6.next = 7;
             return _articleModels["default"].findById(req.params.id).then( /*#__PURE__*/function () {
               var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(doc) {
                 var urls, idss, i, files, _iterator2, _step2, file, _path2, results, data;
@@ -530,12 +531,24 @@ function _update_article() {
               });
             });
 
-          case 6:
+          case 7:
+            _context6.next = 12;
+            break;
+
+          case 9:
+            _context6.prev = 9;
+            _context6.t0 = _context6["catch"](0);
+            res.status(404).json({
+              Message: _context6.t0.message,
+              Error: _context6.t0
+            });
+
+          case 12:
           case "end":
             return _context6.stop();
         }
       }
-    }, _callee6);
+    }, _callee6, null, [[0, 9]]);
   }));
   return _update_article.apply(this, arguments);
 }

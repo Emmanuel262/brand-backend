@@ -191,7 +191,7 @@ export async function create_articles(req, res) {
 
 export async function update_article(req, res) {
   // try {
-  if (req.file || req.files) {
+  if (req.file || req.files.length > 0) {
     console.log("updating image process");
   }
   if (Object.keys(req.body).length == 0) {
@@ -212,16 +212,15 @@ export async function update_article(req, res) {
   //   new: true,
   //   runValidators: true,
   // });
-
   await Article.findById(req.params.id)
     .then(async (doc) => {
+      let urls = [];
       if (req.files.length > 0) {
         let idss = doc.article_photos;
         for (let i = 0; i < idss.length; i++) {
           await cloudinary.v2.uploader.destroy(idss[i]);
         }
         let files = req.files;
-        let urls = [];
         for (const file of files) {
           const { path } = file;
           // const newPath = await uploader(path);
@@ -230,9 +229,26 @@ export async function update_article(req, res) {
           fs.unlinkSync(path);
         }
         doc.article_photos = urls;
+      } else {
+        doc.article_photos = doc.article_photos;
+      }
+
+      if (req.body.description) {
+        doc.description = req.body.description;
+      } else {
+        doc.description = doc.description;
+      }
+
+      if (req.body.articleTitle) {
         doc.articleTitle = req.body.articleTitle;
-        doc.smmary = req.body.summary;
-        doc.description = req.description;
+      } else {
+        doc.articleTitle = doc.articleTitle;
+      }
+
+      if (req.body.summary) {
+        doc.summary = req.body.summary;
+      } else {
+        doc.summary = doc.summary;
       }
       let data = await doc.save();
       res.status(200).json({

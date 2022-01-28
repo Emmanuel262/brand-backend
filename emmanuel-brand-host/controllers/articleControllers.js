@@ -368,7 +368,7 @@ function _update_article() {
         switch (_context6.prev = _context6.next) {
           case 0:
             // try {
-            if (req.file || req.files) {
+            if (req.file || req.files.length > 0) {
               console.log("updating image process");
             }
 
@@ -397,37 +397,38 @@ function _update_article() {
             _context6.next = 6;
             return _articleModels["default"].findById(req.params.id).then( /*#__PURE__*/function () {
               var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(doc) {
-                var idss, i, files, urls, _iterator2, _step2, file, _path2, results, data;
+                var urls, idss, i, files, _iterator2, _step2, file, _path2, results, data;
 
                 return _regenerator["default"].wrap(function _callee5$(_context5) {
                   while (1) {
                     switch (_context5.prev = _context5.next) {
                       case 0:
+                        urls = [];
+
                         if (!(req.files.length > 0)) {
-                          _context5.next = 36;
+                          _context5.next = 35;
                           break;
                         }
 
                         idss = doc.article_photos;
                         i = 0;
 
-                      case 3:
+                      case 4:
                         if (!(i < idss.length)) {
-                          _context5.next = 9;
+                          _context5.next = 10;
                           break;
                         }
 
-                        _context5.next = 6;
+                        _context5.next = 7;
                         return _cloudinary["default"].v2.uploader.destroy(idss[i]);
 
-                      case 6:
+                      case 7:
                         i++;
-                        _context5.next = 3;
+                        _context5.next = 4;
                         break;
 
-                      case 9:
+                      case 10:
                         files = req.files;
-                        urls = [];
                         _iterator2 = _createForOfIteratorHelper(files);
                         _context5.prev = 12;
 
@@ -474,15 +475,35 @@ function _update_article() {
 
                       case 32:
                         doc.article_photos = urls;
-                        doc.articleTitle = req.body.articleTitle;
-                        doc.smmary = req.body.summary;
-                        doc.description = req.description;
+                        _context5.next = 36;
+                        break;
+
+                      case 35:
+                        doc.article_photos = doc.article_photos;
 
                       case 36:
-                        _context5.next = 38;
+                        if (req.body.description) {
+                          doc.description = req.body.description;
+                        } else {
+                          doc.description = doc.description;
+                        }
+
+                        if (req.body.articleTitle) {
+                          doc.articleTitle = req.body.articleTitle;
+                        } else {
+                          doc.articleTitle = doc.articleTitle;
+                        }
+
+                        if (req.body.summary) {
+                          doc.summary = req.body.summary;
+                        } else {
+                          doc.summary = doc.summary;
+                        }
+
+                        _context5.next = 41;
                         return doc.save();
 
-                      case 38:
+                      case 41:
                         data = _context5.sent;
                         res.status(200).json({
                           status: "successful updated",
@@ -491,7 +512,7 @@ function _update_article() {
                           }
                         });
 
-                      case 40:
+                      case 43:
                       case "end":
                         return _context5.stop();
                     }

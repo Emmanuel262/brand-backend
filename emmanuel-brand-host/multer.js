@@ -16,7 +16,7 @@ var _dirname = _path["default"].resolve(); // specify the storage engine
 
 var storage = _multer["default"].diskStorage({
   destination: function destination(req, file, cb) {
-    cb(null, _path["default"].join(_dirname, "/uploads"));
+    cb(null, "./uploads");
   },
   filename: function filename(req, file, cb) {
     cb(null, Date.now() + "-" + file.originalname);

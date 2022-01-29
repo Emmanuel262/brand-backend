@@ -58,7 +58,7 @@ const createToken = (id, userEmail) => {
     },
     process.env.JWT_SECRET,
     {
-      expiresIn: process.env.JWT_COOKIE_EXPIRES_IN,
+      expiresIn: process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000,
     }
   );
 };
@@ -87,16 +87,22 @@ export async function login_post(req, res) {
     const token = createToken(user._id, user.email);
     res.cookie("jwt", token, {
       expires: new Date(
-        Date.now() + process.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+        Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
       ),
       secure: req.secure || req.headers["x-forwarded-photo"] === "https",
     });
     // Remove password from output
     user.password = undefined;
+    res.header("Token", token);
+    res.header("Set-Cookie", `jwt=${token}; path=/;`);
+    res.setHeader("SET-COOKIE", "JSESSIONID=" + token + "; HttpOnly");
     res.status(200).json({
       status: "User login Successful",
       data: {
         user,
+      },
+      token: {
+        token,
       },
     });
   } catch (error) {

@@ -29,7 +29,8 @@ function checkAuthentication(req, res, next) {
     next();
   } catch (error) {
     return res.status(401).json({
-      message: "You are not allowed to access this endpoint. Please login to your credential or contact webpage owner"
+      message: "You are not allowed to access this endpoint. Please login to your credential or contact webpage owner",
+      Error: error
     });
   }
 }

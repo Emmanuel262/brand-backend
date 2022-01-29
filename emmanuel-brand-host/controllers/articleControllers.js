@@ -225,14 +225,15 @@ function _create_articles() {
             throw errors;
 
           case 8:
-            if (!(req.files.length <= 0 || req.files === [] || req.files === "undefined" || req.files === undefined || req.files === null)) {
-              _context4.next = 10;
-              break;
-            }
-
-            throw new Error("At least one image is required for an article");
-
-          case 10:
+            // if (
+            //   req.files.length <= 0 ||
+            //   req.files === [] ||
+            //   req.files === "undefined" ||
+            //   req.files === undefined ||
+            //   req.files === null
+            // ) {
+            //   throw new Error("At least one image is required for an article");
+            // }
             uploader = /*#__PURE__*/function () {
               var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(path) {
                 return _regenerator["default"].wrap(function _callee3$(_context3) {
@@ -263,49 +264,49 @@ function _create_articles() {
             realUrls = [];
             files = req.files;
             _iterator = _createForOfIteratorHelper(files);
-            _context4.prev = 16;
+            _context4.prev = 14;
 
             _iterator.s();
 
-          case 18:
+          case 16:
             if ((_step = _iterator.n()).done) {
-              _context4.next = 28;
+              _context4.next = 26;
               break;
             }
 
             file = _step.value;
             _path = file.path;
-            _context4.next = 23;
+            _context4.next = 21;
             return uploader(_path);
 
-          case 23:
+          case 21:
             newPath = _context4.sent;
             urls.push(newPath);
 
             _fs["default"].unlinkSync(_path);
 
+          case 24:
+            _context4.next = 16;
+            break;
+
           case 26:
-            _context4.next = 18;
+            _context4.next = 31;
             break;
 
           case 28:
-            _context4.next = 33;
-            break;
-
-          case 30:
-            _context4.prev = 30;
-            _context4.t0 = _context4["catch"](16);
+            _context4.prev = 28;
+            _context4.t0 = _context4["catch"](14);
 
             _iterator.e(_context4.t0);
 
-          case 33:
-            _context4.prev = 33;
+          case 31:
+            _context4.prev = 31;
 
             _iterator.f();
 
-            return _context4.finish(33);
+            return _context4.finish(31);
 
-          case 36:
+          case 34:
             for (i = 0; i < urls.length; i++) {
               ids.push(urls[i].id);
             }
@@ -314,7 +315,7 @@ function _create_articles() {
               realUrls.push(urls[_i].url);
             }
 
-            _context4.next = 40;
+            _context4.next = 38;
             return _articleModels["default"].create({
               articleTitle: articleTitle,
               summary: summary,
@@ -334,24 +335,24 @@ function _create_articles() {
               });
             });
 
-          case 40:
-            _context4.next = 45;
+          case 38:
+            _context4.next = 43;
             break;
 
-          case 42:
-            _context4.prev = 42;
+          case 40:
+            _context4.prev = 40;
             _context4.t1 = _context4["catch"](1);
             res.status(400).json({
               ErrorMessage: _context4.t1.message,
               Errors: _context4.t1
             });
 
-          case 45:
+          case 43:
           case "end":
             return _context4.stop();
         }
       }
-    }, _callee4, null, [[1, 42], [16, 30, 33, 36]]);
+    }, _callee4, null, [[1, 40], [14, 28, 31, 34]]);
   }));
   return _create_articles.apply(this, arguments);
 }

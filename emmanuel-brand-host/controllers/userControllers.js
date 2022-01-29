@@ -74,7 +74,7 @@ var createToken = function createToken(id, userEmail) {
     id: id,
     userEmail: userEmail
   }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_COOKIE_EXPIRES_IN
+    expiresIn: process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
   });
 };
 
@@ -127,33 +127,39 @@ function _login_post() {
           case 10:
             token = createToken(user._id, user.email);
             res.cookie("jwt", token, {
-              expires: new Date(Date.now() + process.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000),
+              expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000),
               secure: req.secure || req.headers["x-forwarded-photo"] === "https"
             }); // Remove password from output
 
             user.password = undefined;
+            res.header("Token", token);
+            res.header("Set-Cookie", "jwt=".concat(token, "; path=/;"));
+            res.setHeader("SET-COOKIE", "JSESSIONID=" + token + "; HttpOnly");
             res.status(200).json({
               status: "User login Successful",
               data: {
                 user: user
+              },
+              token: {
+                token: token
               }
             });
-            _context.next = 19;
+            _context.next = 22;
             break;
 
-          case 16:
-            _context.prev = 16;
+          case 19:
+            _context.prev = 19;
             _context.t0 = _context["catch"](4);
             res.status(400).json({
               Error: _context.t0.message
             });
 
-          case 19:
+          case 22:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[4, 16]]);
+    }, _callee, null, [[4, 19]]);
   }));
   return _login_post.apply(this, arguments);
 }

@@ -133,15 +133,15 @@ export async function create_articles(req, res) {
     if (Object.values(errors).length > 0) {
       throw errors;
     }
-    if (
-      req.files.length <= 0 ||
-      req.files === [] ||
-      req.files === "undefined" ||
-      req.files === undefined ||
-      req.files === null
-    ) {
-      throw new Error("At least one image is required for an article");
-    }
+    // if (
+    //   req.files.length <= 0 ||
+    //   req.files === [] ||
+    //   req.files === "undefined" ||
+    //   req.files === undefined ||
+    //   req.files === null
+    // ) {
+    //   throw new Error("At least one image is required for an article");
+    // }
 
     const uploader = async (path) => await uploads(path, "E-BRAND");
 
